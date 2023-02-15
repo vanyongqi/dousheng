@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/dousheng-backend.iml" filepath="$PROJECT_DIR$/.idea/dousheng-backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/dousheng.iml" filepath="$PROJECT_DIR$/.idea/dousheng.iml" />
     </modules>
   </component>
 </project>
