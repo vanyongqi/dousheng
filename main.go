@@ -1,7 +1,6 @@
 package main
 
 import (
-	"dousheng-backend/Middlewares"
 	"dousheng-backend/Router"
 	//"github.com/vanyongqi/dousheng/service",
 	"github.com/gin-gonic/gin"
@@ -10,7 +9,7 @@ import (
 func main() {
 
 	r := gin.Default()
-	r.Use(Middlewares.InitLogger())
+	//r.Use(Middlewares.InitLogger())
 	Router.InitRouter(r)
 	r.Run(":8080")
 	//// listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")

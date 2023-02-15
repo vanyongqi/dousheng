@@ -10,7 +10,8 @@ func InitRouter(r *gin.Engine) {
 	r.Static("/static", "./public") //资源目录
 
 	apiRouter := r.Group("/api") //路由分组
-
+	//test apis
+	apiRouter.GET("/re", Controllers.Register)
 	//basic apis
 	apiRouter.GET("/feed/", Controllers.GetFeed)                    //主页面的视频流
 	apiRouter.GET("/user/", Controllers.GetUserInfo)                //获取用户的身份信息
@@ -20,8 +21,8 @@ func InitRouter(r *gin.Engine) {
 	apiRouter.POST("/publish/list/", Controllers.PostPublishList)   //获取发布视频列表
 
 	// user_behaviour_video apis
-	apiRouter.POST("/favorite/action/", Controllers.PostFavorateAction) //赞
-	apiRouter.GET("/favorite/list/", Controllers.GetFavoritList)        //赞列表
+	apiRouter.POST("/favorite/action/", Controllers.PostFavoriteAction) //赞
+	apiRouter.GET("/favorite/list/", Controllers.GetFavoriteList)       //赞列表
 	apiRouter.POST("/comment/action/", Controllers.PostCommentAction)   //评论
 	apiRouter.GET("/comment/list/", Controllers.GetCommentList)         //评论列表
 
