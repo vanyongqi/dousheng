@@ -1,0 +1,9 @@
+package common
+
+const (
+	SUCCESS = iota
+	WRONGTOKEN
+	REQUESTERROR
+	NOTFOUND
+	INTERNALERROR
+)

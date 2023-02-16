@@ -16,10 +16,12 @@ type User struct {
 	IsFollow      bool   `json:"is_follow"`
 }
 
-type UserLoginResponse struct {
+type UserLoginRegisterResponse struct {
 	Response
-	UserID int64  `json:"user_id,omitempty"`
-	Token  string `json:"token"`
+	UserID   int64  `json:"user_id,omitempty"`
+	UserName string `json:"user_name,omitempty"`
+	Token    string `json:"token"`
+	Username string
 }
 
 type UserResponse struct {

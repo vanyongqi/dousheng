@@ -2,7 +2,6 @@ package DAO
 
 import (
 	"dousheng-backend/Models"
-	_ "dousheng-backend/Models"
 	"fmt"
 	"gorm.io/gorm"
 )

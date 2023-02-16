@@ -2,9 +2,15 @@ package Controllers
 
 import (
 	"dousheng-backend/Controllers/common"
+	"dousheng-backend/Databases"
+	"dousheng-backend/Databases/DAO"
+	"dousheng-backend/Middlewares"
+	"dousheng-backend/Models"
+	"dousheng-backend/Utils"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
+	"net/http"
 )
 
 /*
@@ -58,25 +64,9 @@ func Register(c *gin.Context) {
 
 /**************** var block ***********************/
 
-type Register_Login_Request struct {
+type RegisterLoginRequest struct {
 	Username string `json:"username" binding:"required,min=6,max=16" form:"username"`
 	Password string `json:"password" binding:"required,min=6,max=16" form:"password"`
-}
-
-type Response struct {
-	StatusCode int32  `json:"status_code"`
-	StatusMsg  string `json:"status_msg,omitempty"`
-}
-
-type UserLoginResponse struct {
-	Response
-	UserId int64  `json:"user_id,omitempty"`
-	Token  string `json:"token"`
-}
-
-type UserResponse struct {
-	Response
-	User common.User `json:"user"`
 }
 
 /***********************func block*********************************/
@@ -94,24 +84,57 @@ func VerifyPassword(sourcePwd, hashPwd string) bool {
 }
 
 func PostRegisterUser(c *gin.Context) {
-	var req Register_Login_Request
+	db := Databases.DatabaseSession()
+	var req RegisterLoginRequest
 	// s1 verify parameters is valid
-	// s2 verify user is already registered or not
-	// s3 create user from GROM by username and password
-	// s4 generate token from middleware layer
-	// s5 response about user's registration
-	c.JSON(200, gin.H{"user": "register is okay"})
-
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+	if !Utils.BindAndValid(c, &req) {
+		c.JSON(http.StatusUnprocessableEntity, common.Response{
+			StatusCode: 1,
+			StatusMsg:  "参数匹配错误",
+		})
+		c.JSON(200, gin.H{"name": req.Username, "password": req.Password})
 		return
 	}
+	// s2 verify user is already registered or not
+	if DAO.GetUserByName(db, req.Username) != nil {
+		logrus.Warn("用户名重复，用户注册失败！")
+		c.JSON(http.StatusOK, common.Response{
+			StatusCode: 1,
+			StatusMsg:  "the name already exist in database",
+		})
+		return
+	}
+	// s3 create user from GROM by username and password
+	newUser := DAO.CreateUser(db, &Models.User{
+		Name:     req.Username,
+		Password: req.Password,
+		Content:  "",
+	})
+	// s4 generate token from middleware layer
+	token, err := Middlewares.CreateToken(newUser.ID, newUser.Name)
+	if err != nil {
+		logrus.Info(" error while creating token")
+		c.JSON(http.StatusInternalServerError, common.Response{
+			StatusCode: 1,
+			StatusMsg:  "error while creating token",
+		})
+	}
+	// s5 response about user's registration
+	c.JSON(http.StatusOK, common.UserLoginRegisterResponse{
+		Response: common.Response{
+			StatusCode: 0,
+			StatusMsg:  "success",
+		},
+		UserID:   int64(newUser.ID),
+		Token:    token,
+		UserName: newUser.Name,
+	})
 
 }
 
 func PostLoginUser(c *gin.Context) {
 
-	var req Register_Login_Request
+	var req RegisterLoginRequest
 	// s1 verify parameters is valid
 	// s2 query user from GROM
 	// s3 check user is registered or not
