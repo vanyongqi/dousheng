@@ -9,7 +9,7 @@ import "gorm.io/gorm"
 
 type User struct {
 	gorm.Model
-	Name           string    `gorm:"uniqueIndex;size:30"`
+	Name           string    `gorm:"uniqueIndex;size:50"`
 	Password       string    `gorm:"size:60"`
 	Content        string    `gorm:"size:60"`
 	Videos         []Video   `gorm:"ForeignKey:AuthorID"`
@@ -17,6 +17,6 @@ type User struct {
 	FavoriteVideos []Video   `gorm:"many2many:user_favorite_videos"`
 	Subscribers    []User    `gorm:"joinForeignKey:UserID;many2many:subscribes"`
 	Followers      []User    `gorm:"joinForeignKey:SubscriberID;many2many:subscribes"`
-	Firends        []User    `gorm:"joinForeignKey:SubscriberID;many2many:firends"`
-	//ChatRecords
+	//Firends      []User    `gorm:"joinForeignKey:SubscriberID;many2many:firends"`
+	//ChatRecords  []User    `gorm:"joinForeignKey:SubscriberID;many2many:firends"`
 }

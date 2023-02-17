@@ -6,7 +6,6 @@ import (
 	"dousheng-backend/Databases/DAO"
 	"dousheng-backend/Middlewares"
 	"dousheng-backend/Models"
-	"dousheng-backend/Utils"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
@@ -65,8 +64,8 @@ func Register(c *gin.Context) {
 /**************** var block ***********************/
 
 type RegisterLoginRequest struct {
-	Username string `json:"username" binding:"required,min=6,max=16" form:"username"`
-	Password string `json:"password" binding:"required,min=6,max=16" form:"password"`
+	Username string `json:"username" binding:"required,min=4,max=16" form:"username"`
+	Password string `json:"password" binding:"required,min=4,max=16" form:"password"`
 }
 
 /***********************func block*********************************/
@@ -86,37 +85,41 @@ func VerifyPassword(sourcePwd, hashPwd string) bool {
 func PostRegisterUser(c *gin.Context) {
 	db := Databases.DatabaseSession()
 	var req RegisterLoginRequest
+
 	// s1 verify parameters is valid
-	if !Utils.BindAndValid(c, &req) {
+	if err := c.ShouldBindQuery(&req); err != nil {
+		logrus.Error("用户信息绑定失败,Tips：ID长度为4-16个字，请核对！")
 		c.JSON(http.StatusUnprocessableEntity, common.Response{
 			StatusCode: 1,
-			StatusMsg:  "参数匹配错误",
+			StatusMsg:  "用户信息绑定失败，Tips：ID长度为4-16个字，请核对！",
 		})
 		c.JSON(200, gin.H{"name": req.Username, "password": req.Password})
 		return
 	}
+
 	// s2 verify user is already registered or not
 	if DAO.GetUserByName(db, req.Username) != nil {
-		logrus.Warn("用户名重复，用户注册失败！")
+		logrus.Warn("用户名重复，用户注册失败！the name already exist in database")
 		c.JSON(http.StatusOK, common.Response{
-			StatusCode: 1,
-			StatusMsg:  "the name already exist in database",
+			StatusCode: 2,
+			StatusMsg:  "用户名重复，用户注册失败！the name already exist in database",
 		})
+		c.JSON(200, req.Username)
 		return
 	}
 	// s3 create user from GROM by username and password
 	newUser := DAO.CreateUser(db, &Models.User{
 		Name:     req.Username,
-		Password: req.Password,
+		Password: BcryptEncode(req.Password),
 		Content:  "",
 	})
 	// s4 generate token from middleware layer
 	token, err := Middlewares.CreateToken(newUser.ID, newUser.Name)
 	if err != nil {
-		logrus.Info(" error while creating token")
+		logrus.Info(" error happened while creating token")
 		c.JSON(http.StatusInternalServerError, common.Response{
-			StatusCode: 1,
-			StatusMsg:  "error while creating token",
+			StatusCode: 3,
+			StatusMsg:  "error happened while creating token",
 		})
 	}
 	// s5 response about user's registration

@@ -8,13 +8,14 @@ import (
 	"strconv"
 )
 
-func BindAndValid(c *gin.Context, target interface{}) bool {
+func BindDataToVar(c *gin.Context, target interface{}) bool {
 	var queryOK bool = true
 
 	if err := c.ShouldBindQuery(target); err != nil {
 		queryOK = false
 	}
-
+	obj := target
+	c.JSON(200, obj)
 	return queryOK
 }
 

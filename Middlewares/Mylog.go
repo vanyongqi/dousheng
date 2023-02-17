@@ -63,9 +63,9 @@ func (t *LogFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 		funcVal := entry.Caller.Function
 		fileVal := fmt.Sprintf("%s:%d", path.Base(entry.Caller.File), entry.Caller.Line)
 		//自定义输出格式
-		fmt.Fprintf(b, "[%5s] ▶▶%5s ▍ %5s %5s ▍ %5s\n", timestamp, entry.Level, fileVal, funcVal, entry.Message)
+		fmt.Fprintf(b, "[%5s] ▶▶ %5s ▍ %5s %5s ▍ %5s\n", timestamp, entry.Level, fileVal, funcVal, entry.Message)
 	} else {
-		fmt.Fprintf(b, "[%5s] ▶▶%5s ▍ %5s ▍\n", timestamp, entry.Level, entry.Message)
+		fmt.Fprintf(b, "[%5s] ▶▶ %5s ▍ %5s ▍\n", timestamp, entry.Level, entry.Message)
 	}
 	return b.Bytes(), nil
 }
