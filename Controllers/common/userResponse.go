@@ -21,7 +21,6 @@ type UserLoginRegisterResponse struct {
 	UserID   int64  `json:"user_id,omitempty"`
 	UserName string `json:"user_name,omitempty"`
 	Token    string `json:"token"`
-	Username string
 }
 
 type UserResponse struct {
