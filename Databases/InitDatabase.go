@@ -33,7 +33,7 @@ func InitDatabase() {
 	conn.Password = "123456"
 	conn.Host = "127.0.0.1"
 	conn.Port = 3306
-	conn.Database = "gorm"
+	conn.Database = "dousheng"
 
 	fmt.Println("用户:", conn.Account, "密码:", conn.Password, "主机地址 :", conn.Host, "端口:", conn.Port, "数据库名称", conn.Database)
 
