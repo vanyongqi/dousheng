@@ -4,6 +4,8 @@ import (
 	"dousheng-backend/Databases"
 	"dousheng-backend/Middlewares"
 	"dousheng-backend/Router"
+	"fmt"
+
 	//"github.com/vanyongqi/dousheng/service",
 	"github.com/gin-gonic/gin"
 )
@@ -12,6 +14,7 @@ func main() {
 
 	r := gin.Default()
 	r.Use(Middlewares.InitLogger())
+	r.Use(func(ctx *gin.Context) { fmt.Println("---------------------路由启动----------------------") })
 	Databases.InitDatabase()
 	Router.InitRouter(r)
 	r.Run(":8080")
