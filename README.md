@@ -70,12 +70,13 @@
 - >/douyin/favorite/list/ - 赞列表
 - >/douyin/comment/action/ - 评论操作
 - >/douyin/comment/list/ - 视频评论列表
-### **未实现**
 - >/douyin/message/chat/ - 聊天记录
 - >douyin/message/action/ - 消息操作
 - >/douyin/relation/friend/list/ - 用户好友列表
 
 
 **优化：**
-> 日志目前是直接写入控制台信息,os.Stdout，可以自定义日志输出，如 fatal error  warning print
-> message 模块没有加 好友列表没有加
+> 增加自定义日志模块
+> 密码采用bcrypt模块加密
+> jwt设置token
+> 

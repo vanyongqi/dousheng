@@ -9,14 +9,20 @@ import "gorm.io/gorm"
 
 type User struct {
 	gorm.Model
-	Name           string    `gorm:"uniqueIndex;size:50"`
-	Password       string    `gorm:"size:60"`
-	Content        string    `gorm:"size:60"`
+	Avatar          string `gorm:"size:100"`
+	BackgroundImage string `gorm:"size:100"`
+	Name            string `gorm:"uniqueIndex;size:20"`
+	Password        string `gorm:"size:100"`
+	Signature       string `gorm:"size:30"`
+	//FavoriteCount   int    `json:"favorite_count"` //喜欢数
+	//TotalFavorite   string `json:"total_favorite"` //点赞数
+	//WorkCount       int    `json:"work_count"`     //作品数
+
 	Videos         []Video   `gorm:"ForeignKey:AuthorID"`
 	Comments       []Comment `gorm:"many2many:comments;joinForeignKey:UserID"`
 	FavoriteVideos []Video   `gorm:"many2many:user_favorite_videos"`
-	Subscribers    []User    `gorm:"joinForeignKey:UserID;many2many:subscribes"`
-	Followers      []User    `gorm:"joinForeignKey:SubscriberID;many2many:subscribes"`
+	Follows        []User    `gorm:"joinForeignKey:UserID;many2many:follows"`   //我关注的人
+	Followers      []User    `gorm:"joinForeignKey:FollowID;many2many:follows"` //关注我的人
 	//Firends      []User    `gorm:"joinForeignKey:SubscriberID;many2many:firends"`
 	//ChatRecords  []User    `gorm:"joinForeignKey:SubscriberID;many2many:firends"`
 }

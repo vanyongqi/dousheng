@@ -1,9 +1,10 @@
-package common
+package response
 
 const (
 	SUCCESS = iota
 	WRONGTOKEN
 	REQUESTERROR
+	BADREQUEST
 	NOTFOUND
 	INTERNALERROR
 )
