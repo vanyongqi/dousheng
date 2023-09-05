@@ -100,7 +100,7 @@ Github  地址，权限设置为 public- https://github.com/vanyongqi/dousheng
 2. 持久层（Dao）：用于进行数据库的操作。
 [图片]
 3.3 项目代码介绍
-└──Configs配置文件
+>└──Configs配置文件
 │   ├──msyql.json数据库 名称 密码
 ├──Controllers
 │   ├──request  请求格式
